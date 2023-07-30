@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="header">Calculate Pokemon DPS</h1>
+    <br>
+
+    <form method="post">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <label for="name"><h2>Name:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="name" placeholder="Giratina Origin"/>
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="lvl"><h2>Level:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="lvl" placeholder="51"/>
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="fast_move"><h2>Fast move:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="fast_move" placeholder="Shadow Claw">
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="charged_move"><h2>Charged move:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="charged_move" placeholder="Shadow Force"/>
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="iv"><h2>IV:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="iv" placeholder="15-15-15"/>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+        <input type="checkbox" name="is_shiny" value="shiny" class="cbox">
+        <label for="is_shiny"><h3><font color="white">shiny</font></h3></label>
+        <input type="checkbox" name="is_shadow" value="shadow" class="cbox"/>
+        <label for="is_shadow"><h3><font color="white">shadow</font></h3></label>
+        <br>
+        <input style="margin-top: 10px;" type="submit" value="calculate" class="btn btn-info"/>
+    </form>
+    <br>
+
+    <h2>Result:</h2>
+
+    {% if sprite %}
+        <a href="https://gamepress.gg/pokemongo/pokemon/{{ sprite|replace('.png', '') }}" target="_blank">
+        {% if is_shiny %}
+            <img src="../static/sprites/pokemon/shiny/{{ sprite }}">
+        {% else %}
+            <img src="../static/sprites/pokemon/{{ sprite }}">
+        {% endif %}
+        </a>
+    {% else %}
+        <img src="{{ url_for('static', filename='sprites/pokemon/0.png') }}">
+    {% endif %}
+
+    {% if dps %}
+        <h2>{{ dps }}</h2>
+    {% endif %}
+{% endblock %}
