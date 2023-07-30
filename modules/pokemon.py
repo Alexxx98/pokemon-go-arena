@@ -82,14 +82,18 @@ class Pokemon():
         raise ValueError("No such fast move")
     
 
-    def get_sprite(self, stats, name):
+    def get_sprite(self, stats, name, is_shiny):
         pokemon_id = stats['pokemon_id']
         name = name.split()
         if len(name) > 1:
-            sprite = f"{pokemon_id}-{name[1]}.png"
-            return sprite
-        sprite = f"{pokemon_id}.png"
-        return sprite
+            filename = f"{pokemon_id}-{name[1].lower()}.png"
+        else:
+            filename = f"{pokemon_id}.png"
+
+        if is_shiny:
+            return f"static/sprites/pokemon/shiny{filename}"
+        return f"static/sprites/pokemon/{filename}"
+
                 
 
     def calculate_dps(self, fast_move, charge_move, types, atk_stat, atk_iv):

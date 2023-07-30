@@ -57,13 +57,11 @@
     <h2>Result:</h2>
 
     {% if sprite %}
-        <a href="https://gamepress.gg/pokemongo/pokemon/{{ sprite|replace('.png', '') }}" target="_blank">
-        {% if is_shiny %}
-            <img src="../static/sprites/pokemon/shiny/{{ sprite }}">
+        {% if is_shadow %}
+            <img src="{{ shadow_sprite }}">
         {% else %}
-            <img src="../static/sprites/pokemon/{{ sprite }}">
+            <img src="{{ sprite }}">
         {% endif %}
-        </a>
     {% else %}
         <img src="{{ url_for('static', filename='sprites/pokemon/0.png') }}">
     {% endif %}
