@@ -91,8 +91,8 @@ class Pokemon():
             filename = f"{pokemon_id}.png"
 
         if is_shiny:
-            return f"static/sprites/pokemon/shiny{filename}"
-        return f"static/sprites/pokemon/{filename}"
+            return f"shiny/{filename}"
+        return f"{filename}"
 
                 
 
