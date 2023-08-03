@@ -1,3 +1,4 @@
+from typing import Any
 from modules import cmp_table
 import requests
 import math
@@ -6,13 +7,15 @@ import math
 pogoapi = "https://pogoapi.net/api/v1/"
 
 class Pokemon():
-    def __init__(self, name, lvl, fast_move, charge_move, iv, is_shadow):
+    def __init__(self, name, lvl, fast_move, charged_move, iv, is_shadow):
         self.name = name
         self.lvl = lvl
         self.fast_move = fast_move
-        self.charge_move = charge_move
+        self.charged_move = charged_move
         self.iv = [int(stat) for stat in iv.split('-')]
         self.is_shadow = is_shadow
+        self.sprite = None
+        self.dps = None
 
 
     def get_pokemon_stats(self):
@@ -77,7 +80,7 @@ class Pokemon():
         response = requests.get(pogoapi + cm)
         data = response.json()
         for move in data:
-            if move['name'].lower() == self.charge_move.lower():
+            if move['name'].lower() == self.charged_move.lower():
                 return move
         raise ValueError("No such fast move")
     
@@ -91,8 +94,9 @@ class Pokemon():
             filename = f"{pokemon_id}.png"
 
         if is_shiny:
-            return f"shiny/{filename}"
-        return f"{filename}"
+            self.sprite = f"shiny/{filename}"
+            return
+        self.sprite = filename
 
                 
 
@@ -132,5 +136,5 @@ class Pokemon():
         dps = (fdps * ceps + cdps * feps) / (ceps + feps)
         #dps = dps0 + (cdps - fdps) / (ceps + feps) * 0.5
 
-        return f"{dps:.2f}"
+        self.dps = f"{dps:.2f}"
     

@@ -13,6 +13,10 @@ div.blackbox {
     margin-bottom: 30px;
 }
 
+div.pokemon-tab {
+    background-color: rgb(158, 213, 226);
+}
+
 input.cbox {
     width: 20px;
     height: 20px;

@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 from dotenv import load_dotenv
-from modules import image_converter as ic
 from modules import Pokemon
 import os
 
@@ -10,6 +9,9 @@ app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
 
+# List for pokemon instances
+pokemons = list()
+
 
 @app.route('/')
 def home():
@@ -18,6 +20,7 @@ def home():
 
 @app.route("/dps", methods=['POST', 'GET'])
 def dps():
+
     if request.method == 'POST':
         name = request.form.get('name')
         lvl = request.form.get('lvl')
@@ -28,6 +31,8 @@ def dps():
         is_shiny = request.form.get('is_shiny')
 
         pokemon = Pokemon(name, lvl, fast_move, charged_move, iv, is_shadow)
+        if name:
+            pokemons.append(pokemon)
 
         fm = pokemon.get_fast_move()
         cm = pokemon.get_charge_move()
@@ -36,17 +41,19 @@ def dps():
         atk_stat = stats['base_attack']
         atk_iv = pokemon.iv[0]
 
-        dps = pokemon.calculate_dps(fm, cm, types, atk_stat, atk_iv)
+        pokemon.calculate_dps(fm, cm, types, atk_stat, atk_iv)
         
-        sprite = pokemon.get_sprite(stats, name, is_shiny)
-        ic.black_to_transparent(sprite)
-
-        shadow_flames = "static/images/shadow_flames.png"
-        shadow_sprite = ic.overlay_image(sprite, shadow_flames)
+        pokemon.get_sprite(stats, name, is_shiny)
     else:
-        dps, sprite, is_shiny, shadow_sprite, is_shadow = None, None, None, None
+        is_shiny = None
+    return render_template('dps.html', is_shiny=is_shiny, pokemons=pokemons)
 
-    return render_template('dps.html',is_shadow=is_shadow, dps=dps, sprite=sprite, is_shiny=is_shiny, shadow_sprite=shadow_sprite)
+
+@app.route('/clear')
+def clear():
+    pokemons.clear()
+
+    return redirect('dps', code=302)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
