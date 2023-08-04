@@ -6,15 +6,18 @@ body {
 }
 
 div.blackbox {
-    text-align: center;
     background-color: rgba(0,0,0,.7);
     height: 100vh;
     margin-top: 30px;
     margin-bottom: 30px;
 }
 
-div.pokemon-tab {
-    background-color: rgb(158, 213, 226);
+div.centerized {
+    text-align: center;
+}
+
+div.pokemon-container{
+    position: relative;
 }
 
 input.cbox {
@@ -51,6 +54,24 @@ img.icon {
     position: relative;
 }
 
+img.type_left {
+    width: 36px;
+    height: 36px;
+}
+
+img.type_right {
+    width: 36px;
+    height: 36px;
+    float: right;
+    margin-top: 15px;
+}
+
+img.type_small {
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+}
+
 img.sprite {
     top: 45%;
     left: 60%;
@@ -64,4 +85,21 @@ span.nav {
 
 a.nav {
     font-size: 160%;
+}
+
+label.pokemon-tab {
+    font-size: 120%;
+    position: relative;
+}
+
+label.dps {
+    right: -30%;
+}
+
+label.fm {
+    right: -30%;
+}
+
+label.cm {
+    right: -30%;
 }

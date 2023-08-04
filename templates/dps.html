@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div class="centerized">
     <h1 class="header">Calculate Pokemon DPS</h1>
     <br>
 
@@ -55,26 +56,46 @@
     <br>
 
     <h2>Results:</h2>
+    </div>
 
     {% if pokemons|length > 0 %}
         {% for pokemon in pokemons %}
-            <div class="container-fluid pokemon-tab">
-                <h3>
-                    <img src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="48px" width="48px">
-                    {{ pokemon.name|capitalize() }}
-                    {{ pokemon.lvl }}
-                    {{ pokemon.fast_move }}
-                    {{ pokemon.charged_move }}
-                    {{ pokemon.dps }} DPS
-                </h3>
+            {% if pokemon.types|length > 1 %}
+                <div class="container-fluid pokemon-container" style="background: linear-gradient(to right, {{ types_colours[pokemon.types[0]] }} 50%, {{ types_colours[pokemon.types[1]] }} 50%);">
+            {% else %}
+                <div class="container-fluid pokemon-container" style="background-color: {{ types_colours[pokemon.types[0]] }};">
+            {% endif %}
+                <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_left">
+                <img src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="66px" width="66px">
+                <label class="pokemon-tab badge">{{ pokemon.name|capitalize() }}</label>
+
+                <label class="pokemon-tab badge" style="background-color: black;">{{ pokemon.lvl }} lvl</label>
+
+                <label class="pokemon-tab fm badge" style="background-color: {{ types_colours[pokemon.fast_move['type']|lower()] }};">
+                    <img src="../static/types/{{ pokemon.fast_move['type']|lower() }}.png" class="type_small">{{ pokemon.fast_move['name'] }}
+                </label>
+
+                <label class="pokemon-tab cm badge" style="background-color: {{ types_colours[pokemon.charged_move['type']|lower()] }};">
+                    <img src="../static/types/{{ pokemon.charged_move['type']|lower() }}.png" class="type_small">{{ pokemon.charged_move['name'] }}
+                </label>
+
+                <label class="pokemon-tab dps badge bg-dark">{{ pokemon.dps }} DPS</label>
+                {% if pokemon.types|length > 1 %}
+                    <img src="../static/types/{{ pokemon.types[1] }}.png" class="type_right"> 
+                {% else %}
+                    <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_right">
+            {% endif %}
             </div>
+            <br>
         {% endfor %}
-        <a href="/clear" class="btn btn-info">clear all</a>
+
+        <div class="centerized">
+            <a href="/clear" class="btn btn-info">clear all</a>
+        </div>
     {% else %}
-        <img src="{{ url_for('static', filename='sprites/pokemon/0.png') }}">
+        <div class="centerized">
+            <img src="{{ url_for('static', filename='sprites/pokemon/0.png') }}">
+        </div>
     {% endif %}
 
-    {% if dps %}
-        <h2>{{ dps }}</h2>
-    {% endif %}
 {% endblock %}

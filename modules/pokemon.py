@@ -14,17 +14,23 @@ class Pokemon():
         self.charged_move = charged_move
         self.iv = [int(stat) for stat in iv.split('-')]
         self.is_shadow = is_shadow
+        self.types = []
         self.sprite = None
         self.dps = None
+        self.stats = None
 
 
     def get_pokemon_stats(self):
         pokemon_stats = "pokemon_stats.json"
+        mega_pokemon_stats = "mega_pokemon.josn"
         try:
             response = requests.get(pogoapi + pokemon_stats)
+            response_mega = requests.get(pogoapi + mega_pokemon_stats)
             data = response.json()
+            data.extend(response_mega.json())
             name = self.name.split()
             name_len = len(name)
+            print(name)
             for stats in data:
                 if name_len > 1:
                     if stats['pokemon_name'] == name[0].capitalize():
@@ -38,23 +44,39 @@ class Pokemon():
                     
                 elif stats['pokemon_name'].lower() == name[0].lower():
                     return stats
+                
+                elif stats['mega_name'].lower() == (" ").join(name).lower():
+                    try:
+                        self.stats = stats
+                        return stats
+                    except KeyError:
+                        continue
+            
         except requests.exceptions.RequestException as e:
             print("Error", e)
 
 
     def get_types(self):
         base_url = 'https://pokeapi.co/api/v2/pokemon/'
+
+        # Giratina case
         name = self.name.split()
         name = ("-").join(name).lower()
 
+        # For regular pokemon
         try:
             r = requests.get(base_url + name)
             data = r.json()
-            types = list()
             for type in data['types']:
-                types.append(type['type']['name'])
-            return types
+                self.types.append(type['type']['name'])
         except requests.exceptions.RequestException as e:
+            print("Error", e)
+
+        # For mega pokemon
+        try:
+            for type in self.stats['type']:
+                self.types.append(type.lower())
+        except ValueError as e:
             print("Error", e)
     
 
@@ -71,6 +93,7 @@ class Pokemon():
         data = response.json()
         for move in data:
             if move['name'].lower() == self.fast_move.lower():
+                self.fast_move = move
                 return move
         raise ValueError("No such fast move")
     
@@ -81,8 +104,9 @@ class Pokemon():
         data = response.json()
         for move in data:
             if move['name'].lower() == self.charged_move.lower():
+                self.charged_move = move
                 return move
-        raise ValueError("No such fast move")
+        raise ValueError("No such charged move")
     
 
     def get_sprite(self, stats, name, is_shiny):
@@ -100,11 +124,10 @@ class Pokemon():
 
                 
 
-    def calculate_dps(self, fast_move, charge_move, types, atk_stat, atk_iv):
+    def calculate_dps(self, fast_move, charge_move, atk_stat, atk_iv):
         fm_power, fm_duration, fm_energy_gain, fm_type = fast_move['power'], fast_move['duration'] / 1000, fast_move['energy_delta'], fast_move['type'].capitalize()
         cm_power, cm_duration, cm_energy_cost, cm_type = charge_move['power'], charge_move['duration'] / 1000, charge_move['energy_delta'], charge_move['type'].capitalize()
 
-        types = self.get_types()
         cmp = self.get_cmp()
         attack = (atk_stat + atk_iv) * cmp
 
@@ -114,14 +137,14 @@ class Pokemon():
             SHADOW = 1
         
         # power of fast move
-        if fm_type in types:
+        if fm_type in self.types:
             STAB = 1.2
         else:
             STAB = 1
         fm_dmg = math.floor(0.5 * attack / 100 * fm_power * STAB * SHADOW) + 1
 
         # power of charge move
-        if cm_type in types:
+        if cm_type in self.types:
             STAB = 1.2
         else:
             STAB = 1
