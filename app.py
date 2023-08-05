@@ -57,14 +57,22 @@ def dps():
         is_shiny = request.form.get('is_shiny')
 
         pokemon = Pokemon(name, lvl, fast_move, charged_move, iv, is_shadow)
+        
         if name:
             pokemons.append(pokemon)
 
         fm = pokemon.get_fast_move()
         cm = pokemon.get_charge_move()
-        pokemon.get_types()
-        stats = pokemon.get_pokemon_stats()
-        atk_stat = stats['base_attack']
+
+        if pokemon.is_mega():
+            stats = pokemon.get_mega_pokemon_stats()
+            atk_stat = stats['stats']['base_attack']
+            pokemon.get_mega_types()
+        else:
+            stats = pokemon.get_pokemon_stats()
+            atk_stat = stats['base_attack']
+            pokemon.get_types()
+
         atk_iv = pokemon.iv[0]
 
         pokemon.calculate_dps(fm, cm, atk_stat, atk_iv)

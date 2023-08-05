@@ -20,17 +20,20 @@ class Pokemon():
         self.stats = None
 
 
+    def is_mega(self):
+        name = self.name.split()
+        if name[0].lower() == 'mega' or name[0].lower() == 'primal':
+            return True
+        return False
+
+
     def get_pokemon_stats(self):
         pokemon_stats = "pokemon_stats.json"
-        mega_pokemon_stats = "mega_pokemon.josn"
         try:
             response = requests.get(pogoapi + pokemon_stats)
-            response_mega = requests.get(pogoapi + mega_pokemon_stats)
             data = response.json()
-            data.extend(response_mega.json())
             name = self.name.split()
             name_len = len(name)
-            print(name)
             for stats in data:
                 if name_len > 1:
                     if stats['pokemon_name'] == name[0].capitalize():
@@ -45,39 +48,46 @@ class Pokemon():
                 elif stats['pokemon_name'].lower() == name[0].lower():
                     return stats
                 
-                elif stats['mega_name'].lower() == (" ").join(name).lower():
-                    try:
-                        self.stats = stats
-                        return stats
-                    except KeyError:
-                        continue
-            
         except requests.exceptions.RequestException as e:
             print("Error", e)
+
+    def get_mega_pokemon_stats(self):
+        url = "mega_pokemon.json"
+        response = requests.get(pogoapi + url)
+        if response.ok:
+            data = response.json()
+            for pokemon in data:
+                if pokemon['mega_name'].lower() == self.name.lower():
+                    return pokemon
 
 
     def get_types(self):
         base_url = 'https://pokeapi.co/api/v2/pokemon/'
 
-        # Giratina case
+        # Due to giratina case (giratina-origin/ giratina-altered)
         name = self.name.split()
         name = ("-").join(name).lower()
 
         # For regular pokemon
         try:
-            r = requests.get(base_url + name)
-            data = r.json()
+            response = requests.get(base_url + name)
+            data = response.json()
             for type in data['types']:
                 self.types.append(type['type']['name'])
+            
         except requests.exceptions.RequestException as e:
             print("Error", e)
 
-        # For mega pokemon
-        try:
-            for type in self.stats['type']:
-                self.types.append(type.lower())
-        except ValueError as e:
-            print("Error", e)
+
+    def get_mega_types(self):
+        url = "mega_pokemon.json"
+        response = requests.get(pogoapi + url)
+        if response.ok:
+            data = response.json()
+            for pokemon in data:
+                if pokemon['mega_name'].lower() == self.name.lower():
+                    for type in pokemon['type']:
+                        self.types.append(type.lower())
     
 
     def get_cmp(self):
@@ -112,21 +122,31 @@ class Pokemon():
     def get_sprite(self, stats, name, is_shiny):
         pokemon_id = stats['pokemon_id']
         name = name.split()
-        if len(name) > 1:
+
+        if name[0].lower() == 'mega':
+            filename = f"{pokemon_id}-mega.png"
+            for word in name:
+                if word.lower() == 'x':
+                    filename = f"{pokemon_id}-mega-x.png"
+                elif word.lower() == 'y':
+                    filename = f"{pokemon_id}-mega-y.png"
+        elif name[0].lower() == 'primal':
+            filename = f"{pokemon_id}-primal.png"
+        elif len(name) > 1:
             filename = f"{pokemon_id}-{name[1].lower()}.png"
         else:
             filename = f"{pokemon_id}.png"
 
         if is_shiny:
             self.sprite = f"shiny/{filename}"
-            return
-        self.sprite = filename
+        else:    
+            self.sprite = filename
 
                 
 
     def calculate_dps(self, fast_move, charge_move, atk_stat, atk_iv):
-        fm_power, fm_duration, fm_energy_gain, fm_type = fast_move['power'], fast_move['duration'] / 1000, fast_move['energy_delta'], fast_move['type'].capitalize()
-        cm_power, cm_duration, cm_energy_cost, cm_type = charge_move['power'], charge_move['duration'] / 1000, charge_move['energy_delta'], charge_move['type'].capitalize()
+        fm_power, fm_duration, fm_energy_gain, fm_type = fast_move['power'], fast_move['duration'] / 1000, fast_move['energy_delta'], fast_move['type'].lower()
+        cm_power, cm_duration, cm_energy_cost, cm_type = charge_move['power'], charge_move['duration'] / 1000, charge_move['energy_delta'], charge_move['type'].lower()
 
         cmp = self.get_cmp()
         attack = (atk_stat + atk_iv) * cmp
@@ -138,17 +158,17 @@ class Pokemon():
         
         # power of fast move
         if fm_type in self.types:
-            STAB = 1.2
+            FM_STAB = 1.2
         else:
-            STAB = 1
-        fm_dmg = math.floor(0.5 * attack / 100 * fm_power * STAB * SHADOW) + 1
+            FM_STAB = 1
+        fm_dmg = math.floor(0.5 * attack / 100 * fm_power * FM_STAB * SHADOW) + 1
 
         # power of charge move
         if cm_type in self.types:
-            STAB = 1.2
+            CM_STAB = 1.2
         else:
-            STAB = 1
-        cm_dmg = math.floor(0.5 * attack / 100 * cm_power * STAB * SHADOW) + 1
+            CM_STAB = 1
+        cm_dmg = math.floor(0.5 * attack / 100 * cm_power * CM_STAB * SHADOW) + 1
 
          # dps and eps of fast and charged moves
         fdps = fm_dmg / fm_duration

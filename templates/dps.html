@@ -6,7 +6,7 @@
     <br>
 
     <form method="post">
-        <div class="container">
+        <div class="container-md">
             <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="name"><h2>Name:</h2></label>
@@ -61,15 +61,19 @@
     {% if pokemons|length > 0 %}
         {% for pokemon in pokemons %}
             {% if pokemon.types|length > 1 %}
-                <div class="container-fluid pokemon-container" style="background: linear-gradient(to right, {{ types_colours[pokemon.types[0]] }} 50%, {{ types_colours[pokemon.types[1]] }} 50%);">
+                <div class="container-sm" style="background: linear-gradient(to right, {{ types_colours[pokemon.types[0]] }} 50%, {{ types_colours[pokemon.types[1]] }} 50%);">
             {% else %}
-                <div class="container-fluid pokemon-container" style="background-color: {{ types_colours[pokemon.types[0]] }};">
+                <div class="container-sm" style="background-color: {{ types_colours[pokemon.types[0]] }};">
             {% endif %}
                 <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_left">
                 <img src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="66px" width="66px">
-                <label class="pokemon-tab badge">{{ pokemon.name|capitalize() }}</label>
+                <label class="pokemon-tab badge" style="width: 170px;">
+                    {{ pokemon.name|title() }}
+                </label>
 
-                <label class="pokemon-tab badge" style="background-color: black;">{{ pokemon.lvl }} lvl</label>
+                <label class="pokemon-tab badge" style="background-color: black;">
+                    {{ pokemon.lvl }} lvl
+                </label>
 
                 <label class="pokemon-tab fm badge" style="background-color: {{ types_colours[pokemon.fast_move['type']|lower()] }};">
                     <img src="../static/types/{{ pokemon.fast_move['type']|lower() }}.png" class="type_small">{{ pokemon.fast_move['name'] }}
