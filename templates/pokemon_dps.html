@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block head %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+    
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
+{% endblock %}
+
 {% block content %}
     <div class="centerized">
     <h1 class="header">Calculate Pokemon DPS</h1>
@@ -30,7 +41,7 @@
                     <label for="fast_move"><h2>Fast move:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input type="text" name="fast_move" placeholder="Shadow Claw" autocomplete="off">
+                    <input type="text" id="fast_move" name="fast_move" placeholder="Shadow Claw">
                 </div>
             </div>
 
@@ -39,7 +50,7 @@
                     <label for="charged_move"><h2>Charged move:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input type="text" name="charged_move" placeholder="Shadow Force" autocomplete="off"/>
+                    <input type="text" id="charged_move" name="charged_move" placeholder="Shadow Force">
                 </div>
             </div>
 
@@ -74,7 +85,7 @@
             {% endif %}
                 <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_left">
                 <img src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="66px" width="66px">
-                <label class="pokemon-tab badge" style="width: 175px;">
+                <label class="pokemon-tab badge" style="width: 190px;">
                     {{ pokemon.name|title() }}
                 </label>
 
@@ -108,5 +119,30 @@
             <img src="{{ url_for('static', filename='sprites/pokemon/0.png') }}">
         </div>
     {% endif %}
+
+    <script>
+        $(function () {
+            var availableTags = [
+                {% for suggestion in fm_suggestions %}
+                    "{{suggestion}}",
+                {% endfor %}
+            ];
+            $("#fast_move").autocomplete({
+                source: availableTags
+            });
+        } );
+    </script>
+    <script>
+        $( function() {
+            var availableTags = [
+                {% for suggestion in cm_suggestions %}
+                    "{{suggestion}}",
+                {% endfor %}
+            ];
+            $( "#charged_move" ).autocomplete({
+                source: availableTags
+            });
+        } );
+    </script>
 
 {% endblock %}
