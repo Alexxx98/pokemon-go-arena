@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="centerized">
+    <h1 class="header">Calculate Pokemon DPS</h1>
+    <br>
+
+    <form method="post">
+        <div class="container-md">
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <label for="name"><h2>Name:</h2></label>
+                </div>
+                <div class="col-4">
+                    <h2>{{ name }} <a href='/dps' class='btn btn-info'>new</a></h2>
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="lvl"><h2>Level:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="lvl" placeholder="51" autocomplete="off"/>
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="fast_move"><h2>Fast move:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="fast_move" placeholder="Shadow Claw" autocomplete="off">
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="charged_move"><h2>Charged move:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="charged_move" placeholder="Shadow Force" autocomplete="off"/>
+                </div>
+                <br>
+                <div class="col-4">
+                    <label for="iv"><h2>IV:</h2></label>
+                </div>
+                <div class="col-4">
+                    <input type="text" name="iv" placeholder="15-15-15" autocomplete="off"/>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+        <input type="checkbox" name="is_shiny" value="shiny" class="cbox">
+        <label for="is_shiny"><h3><font color="white">shiny</font></h3></label>
+        <input type="checkbox" name="is_shadow" value="shadow" class="cbox"/>
+        <label for="is_shadow"><h3><font color="white">shadow</font></h3></label>
+        <br>
+        <input style="margin-top: 10px;" type="submit" value="calculate" class="btn btn-info"/>
+    </form>
+    <br>
+
+    <h2>Results:</h2>
+    </div>
+
+    {% if pokemons|length > 0 %}
+        {% for pokemon in pokemons %}
+            {% if pokemon.types|length > 1 %}
+                <div class="container-sm" style="background: linear-gradient(to right, {{ types_colours[pokemon.types[0]] }} 50%, {{ types_colours[pokemon.types[1]] }} 50%);">
+            {% else %}
+                <div class="container-sm" style="background-color: {{ types_colours[pokemon.types[0]] }};">
+            {% endif %}
+                <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_left">
+                <img src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="66px" width="66px">
+                <label class="pokemon-tab badge" style="width: 175px;">
+                    {{ pokemon.name|title() }}
+                </label>
+
+                <label class="pokemon-tab badge" style="background-color: black;">
+                    {{ pokemon.lvl }} lvl
+                </label>
+
+                <label class="pokemon-tab fm badge" style="background-color: {{ types_colours[pokemon.fast_move['type']|lower()] }};">
+                    <img src="../static/types/{{ pokemon.fast_move['type']|lower() }}.png" class="type_small">{{ pokemon.fast_move['name'] }}
+                </label>
+
+                <label class="pokemon-tab cm badge" style="background-color: {{ types_colours[pokemon.charged_move['type']|lower()] }};">
+                    <img src="../static/types/{{ pokemon.charged_move['type']|lower() }}.png" class="type_small">{{ pokemon.charged_move['name'] }}
+                </label>
+
+                <label class="pokemon-tab dps badge bg-dark">{{ pokemon.dps }} DPS</label>
+                {% if pokemon.types|length > 1 %}
+                    <img src="../static/types/{{ pokemon.types[1] }}.png" class="type_right"> 
+                {% else %}
+                    <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_right">
+            {% endif %}
+            </div>
+            <br>
+        {% endfor %}
+
+        <div class="centerized">
+            <a href="/clear" class="btn btn-info">clear all</a>
+        </div>
+    {% else %}
+        <div class="centerized">
+            <img src="{{ url_for('static', filename='sprites/pokemon/0.png') }}">
+        </div>
+    {% endif %}
+
+{% endblock %}

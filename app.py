@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 from modules import Pokemon
+import requests
 import os
 
 load_dotenv()
@@ -34,6 +35,22 @@ types_colours = {
 }
 
 
+def get_name_suggestions():
+    url = "https://pogoapi.net/api/v1/pokemon_stats.json"
+    mega_url = "https://pogoapi.net/api/v1/mega_pokemon.json"
+    response = requests.get(url)
+    mega_response = requests.get(mega_url)
+    if response.ok:
+        data = response.json()
+        mega_data = mega_response.json()
+        suggestions = [(" ").join([pokemon['pokemon_name'], pokemon['form']])\
+                        for pokemon in data if '20' not in pokemon['form']]
+        suggestions = [suggestion.replace('Normal', '') for suggestion in suggestions]
+        mega_suggestions = [pokemon['mega_name'] for pokemon in mega_data]
+        suggestions.extend(mega_suggestions)
+    return suggestions
+
+
 @app.route('/')
 def index():
     return redirect('home', code=302)
@@ -43,12 +60,21 @@ def index():
 def home():
     return render_template('index.html')
 
-
-@app.route("/dps", methods=['POST', 'GET'])
+@app.route('/dps', methods=['POST', 'GET'])
 def dps():
-
+    if request.method == 'GET':
+        suggestions = get_name_suggestions()
+        return render_template('dps.html', suggestions=suggestions)
+    
     if request.method == 'POST':
         name = request.form.get('name')
+        return redirect(url_for('pokemon_dps', name=name))
+
+
+@app.route("/dps_<name>", methods=['POST', 'GET'])
+def pokemon_dps(name):
+
+    if request.method == 'POST':
         lvl = request.form.get('lvl')
         fast_move = request.form.get('fast_move')
         charged_move = request.form.get('charged_move')
@@ -80,7 +106,7 @@ def dps():
         pokemon.get_sprite(stats, name, is_shiny)
     else:
         is_shiny = None
-    return render_template('dps.html', is_shiny=is_shiny, pokemons=pokemons, types_colours=types_colours)
+    return render_template('pokemon_dps.html', is_shiny=is_shiny, pokemons=pokemons, types_colours=types_colours, name=name)
 
 
 @app.route('/clear')
