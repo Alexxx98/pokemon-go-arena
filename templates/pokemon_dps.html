@@ -6,7 +6,7 @@
     <br>
 
     <form method="post">
-        <div class="container-md">
+        <div class="container">
             <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="name"><h2>Name:</h2></label>
@@ -14,37 +14,44 @@
                 <div class="col-4">
                     <h2>{{ name }} <a href='/dps' class='btn btn-info'>new</a></h2>
                 </div>
-                <br>
+            </div>
+
+            <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="lvl"><h2>Level:</h2></label>
                 </div>
                 <div class="col-4">
                     <input type="text" name="lvl" placeholder="51" autocomplete="off"/>
                 </div>
-                <br>
+            </div>
+
+            <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="fast_move"><h2>Fast move:</h2></label>
                 </div>
                 <div class="col-4">
                     <input type="text" name="fast_move" placeholder="Shadow Claw" autocomplete="off">
                 </div>
-                <br>
+            </div>
+
+            <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="charged_move"><h2>Charged move:</h2></label>
                 </div>
                 <div class="col-4">
                     <input type="text" name="charged_move" placeholder="Shadow Force" autocomplete="off"/>
                 </div>
-                <br>
+            </div>
+
+            <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="iv"><h2>IV:</h2></label>
                 </div>
                 <div class="col-4">
                     <input type="text" name="iv" placeholder="15-15-15" autocomplete="off"/>
                 </div>
-                <br>
-                <br>
             </div>
+            <br>
         </div>
         <input type="checkbox" name="is_shiny" value="shiny" class="cbox">
         <label for="is_shiny"><h3><font color="white">shiny</font></h3></label>
