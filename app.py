@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 from modules import Pokemon
 from modules import suggestions as sg
+import requests
 import os
 
 load_dotenv()
@@ -35,6 +36,17 @@ types_colours = {
 }
 
 
+def can_be_shadow(name):
+    url = "https://pogoapi.net/api/v1/shadow_pokemon.json"
+    response = requests.get(url)
+    if response.ok:
+        data = response.json()
+        for pokemon in data.values():
+            if pokemon['name'].lower() == name.lower():
+                return True
+    return False
+
+
 @app.route("/")
 def index():
     return redirect("home", code=302)
@@ -53,11 +65,12 @@ def dps():
 
     if request.method == "POST":
         name = request.form.get("name").strip()
-        return redirect(url_for("pokemon_dps", name=name))
+        shadow = can_be_shadow(name)
+        return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
 
 
-@app.route("/dps_<name>", methods=["POST", "GET"])
-def pokemon_dps(name):
+@app.route("/dps_<name>_<shadow>", methods=["POST", "GET"])
+def pokemon_dps(name, shadow):
     fm_suggestions = sg.get_move_suggestions(name, type="fast")
     cm_suggestions = sg.get_move_suggestions(name, type="charged")
     
@@ -67,6 +80,7 @@ def pokemon_dps(name):
             name=name,
             fm_suggestions=fm_suggestions,
             cm_suggestions=cm_suggestions,
+            shadow=shadow
         )
 
     if request.method == "POST":
@@ -107,6 +121,7 @@ def pokemon_dps(name):
         pokemons=pokemons,
         types_colours=types_colours,
         name=name,
+        shadow=shadow
     )
 
 

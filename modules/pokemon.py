@@ -26,6 +26,7 @@ class Pokemon:
             return True
         return False
 
+
     def get_pokemon_stats(self):
         pokemon_stats = "pokemon_stats.json"
         try:

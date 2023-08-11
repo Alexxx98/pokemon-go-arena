@@ -66,8 +66,10 @@
         </div>
         <input type="checkbox" name="is_shiny" value="shiny" class="cbox">
         <label for="is_shiny"><h3><font color="white">shiny</font></h3></label>
-        <input type="checkbox" name="is_shadow" value="shadow" class="cbox"/>
-        <label for="is_shadow"><h3><font color="white">shadow</font></h3></label>
+        {% if shadow == "True" %}
+            <input type="checkbox" name="is_shadow" value="shadow" class="cbox"/>
+            <label for="is_shadow"><h3><font color="white">shadow</font></h3></label>
+        {% endif %}
         <br>
         <input style="margin-top: 10px;" type="submit" value="calculate" class="btn btn-info"/>
     </form>
