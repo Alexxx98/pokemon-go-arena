@@ -39,4 +39,6 @@ def get_move_suggestions(name, type):
             for pokemon in data
             if pokemon["pokemon_name"] == name
         ]
-    return suggestions[0]
+    result = []
+    [result.extend(sublist) for sublist in suggestions]
+    return result

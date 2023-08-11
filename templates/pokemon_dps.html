@@ -84,7 +84,11 @@
                 <div class="container-sm" style="background-color: {{ types_colours[pokemon.types[0]] }};">
             {% endif %}
                 <img src="../static/types/{{ pokemon.types[0] }}.png" class="type_left">
-                <img src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="66px" width="66px">
+                <img class="sprite" src="../static/sprites/pokemon/{{ pokemon.sprite }}" height="66px" width="66px">
+                {% if pokemon.is_shadow %}
+                    <img class="shadow" src="../static/images/shadow_best.png" height="66px" width="66px">
+                    <a href="https://lovepik.com/images/png-material.html" style="position: fixed; bottom: 0%; right: 2%;">Material Png vectors by Lovepik.com</a>
+                {% endif %}
                 <label class="pokemon-tab badge" style="width: 190px;">
                     {{ pokemon.name|title() }}
                 </label>

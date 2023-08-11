@@ -58,9 +58,10 @@ def dps():
 
 @app.route("/dps_<name>", methods=["POST", "GET"])
 def pokemon_dps(name):
+    fm_suggestions = sg.get_move_suggestions(name, type="fast")
+    cm_suggestions = sg.get_move_suggestions(name, type="charged")
+    
     if request.method == "GET":
-        fm_suggestions = sg.get_move_suggestions(name, type="fast")
-        cm_suggestions = sg.get_move_suggestions(name, type="charged")
         return render_template(
             "pokemon_dps.html",
             name=name,

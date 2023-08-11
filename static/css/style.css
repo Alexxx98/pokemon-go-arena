@@ -77,12 +77,6 @@ img.type_small {
     margin-right: 5px;
 }
 
-img.sprite {
-    top: 45%;
-    left: 60%;
-    position: absolute;
-}
-
 span.nav {
     left: 10px;
     position: relative;
@@ -95,6 +89,18 @@ a.nav {
 label.pokemon-tab {
     font-size: 120%;
     position: relative;
+}
+
+img.sprite {
+    margin-left: 10px;
+    z-index: 1020;
+}
+
+img.shadow {
+    position: absolute;
+    top: 7%;
+    left: 4%;
+    z-index: 1010;
 }
 
 label.dps {
