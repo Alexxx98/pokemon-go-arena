@@ -1,7 +1,6 @@
 from typing import Any
 from modules import cmp_table
 import requests
-import math
 
 
 pogoapi = "https://pogoapi.net/api/v1/"

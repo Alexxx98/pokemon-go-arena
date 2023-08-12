@@ -88,9 +88,34 @@ def pokemon_dps(name, shadow):
 
     if request.method == "POST":
         lvl = request.form.get("lvl")
-        fast_move = request.form.get("fast_move")
-        charged_move = request.form.get("charged_move")
+        try:
+            if int(lvl) not in range(1, 52):
+                flash("Pokemon level has to be in 1 to 51 range", category="danger")
+                return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
+        except ValueError:
+            flash("Level has to a number", category="danger")
+            return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
+
+        fast_move = request.form.get("fast_move").title()
+        if fast_move not in fm_suggestions:
+            flash("Can't find such fast move", category="danger")
+            return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
+        
+        charged_move = request.form.get("charged_move").title()
+        if charged_move not in cm_suggestions:
+            flash("Can't find such cherged move", category="danger")
+            return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
+        
         iv = request.form.get("iv")
+        try:
+            iv_cpy = iv.split('-')
+            atk, dfs, stm = [int(stat)
+                            for stat in iv_cpy
+                            if int(stat) in range(16)]
+        except Exception:
+            flash(f"Wrong format", category="danger")
+            return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
+
         is_shadow = request.form.get("is_shadow")
         is_shiny = request.form.get("is_shiny")
 
