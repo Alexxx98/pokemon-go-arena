@@ -9,6 +9,7 @@ div.blackbox {
     background-color: rgba(0,0,0,.7);
     margin-top: 30px;
     margin-bottom: 30px;
+    min-width: 1200px;
 }
 
 div.centerized {
@@ -124,4 +125,15 @@ label.cm {
     position: absolute;
     top: 21%;
     right: 15%;
+}
+
+input.border {
+    border: 2px solid;
+    border-color: rgb(5, 237, 254);
+}
+
+select.iv {
+    border: 2px solid;
+    border-color: rgb(5, 237, 254);
+    min-width: 14.5%;
 }

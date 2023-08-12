@@ -42,7 +42,7 @@ def can_be_shadow(name):
     if response.ok:
         data = response.json()
         for pokemon in data.values():
-            if pokemon['name'].lower() == name.lower():
+            if pokemon["name"].lower() == name.lower():
                 return True
     return False
 
@@ -76,14 +76,15 @@ def dps():
 def pokemon_dps(name, shadow):
     fm_suggestions = sg.get_move_suggestions(name, type="fast")
     cm_suggestions = sg.get_move_suggestions(name, type="charged")
-    
+
     if request.method == "GET":
         return render_template(
             "pokemon_dps.html",
             name=name,
             fm_suggestions=fm_suggestions,
             cm_suggestions=cm_suggestions,
-            shadow=shadow
+            shadow=shadow,
+            pokemons=pokemons,
         )
 
     if request.method == "POST":
@@ -100,21 +101,17 @@ def pokemon_dps(name, shadow):
         if fast_move not in fm_suggestions:
             flash("Can't find such fast move", category="danger")
             return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
-        
+
         charged_move = request.form.get("charged_move").title()
         if charged_move not in cm_suggestions:
             flash("Can't find such cherged move", category="danger")
             return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
-        
-        iv = request.form.get("iv")
-        try:
-            iv_cpy = iv.split('-')
-            atk, dfs, stm = [int(stat)
-                            for stat in iv_cpy
-                            if int(stat) in range(16)]
-        except Exception:
-            flash(f"Wrong format", category="danger")
-            return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
+
+        attack = request.form.get("attack")
+        defense = request.form.get("defense")
+        stamina = request.form.get("stamina")
+
+        iv = [int(attack), int(defense), int(stamina)]
 
         is_shadow = request.form.get("is_shadow")
         is_shiny = request.form.get("is_shiny")
@@ -149,7 +146,7 @@ def pokemon_dps(name, shadow):
         pokemons=pokemons,
         types_colours=types_colours,
         name=name,
-        shadow=shadow
+        shadow=shadow,
     )
 
 

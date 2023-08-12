@@ -17,7 +17,7 @@
     <br>
 
     <form method="post">
-        <div class="container">
+        <div class="container" style="min-width: 1200px;">
             <div class="row justify-content-center">
                 <div class="col-4">
                     <label for="name"><h2>Name:</h2></label>
@@ -32,7 +32,7 @@
                     <label for="lvl"><h2>Level:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input type="text" name="lvl" placeholder="51" autocomplete="off"/>
+                    <input class="border" type="text" name="lvl" placeholder="51" autocomplete="off"/>
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
                     <label for="fast_move"><h2>Fast move:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input type="text" id="fast_move" name="fast_move" placeholder="Shadow Claw">
+                    <input class="border" type="text" id="fast_move" name="fast_move" placeholder="Shadow Claw">
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
                     <label for="charged_move"><h2>Charged move:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input type="text" id="charged_move" name="charged_move" placeholder="Shadow Force">
+                    <input class="border" type="text" id="charged_move" name="charged_move" placeholder="Shadow Force">
                 </div>
             </div>
 
@@ -59,7 +59,21 @@
                     <label for="iv"><h2>IV:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input type="text" name="iv" placeholder="15-15-15" autocomplete="off"/>
+                    <select class="iv" id="attack" name="attack">
+                        {% for number in range(15, -1, -1) %}
+                            <option value="{{ number }}">{{ number }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="iv" id="defense" name="defense">
+                        {% for number in range(15, -1, -1) %}
+                            <option value="{{ number }}">{{ number }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="iv" id="stamina" name="stamina">
+                        {% for number in range(15, -1, -1) %}
+                            <option value="{{ number }}" id="stamina">{{ number }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
             <br>

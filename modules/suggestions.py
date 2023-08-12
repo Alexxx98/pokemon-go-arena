@@ -14,7 +14,9 @@ def get_name_suggestions():
             for pokemon in data
             if "20" not in pokemon["form"]
         ]
-        suggestions = [suggestion.replace("Normal", "").strip() for suggestion in suggestions]
+        suggestions = [
+            suggestion.replace("Normal", "").strip() for suggestion in suggestions
+        ]
         mega_suggestions = [pokemon["mega_name"].strip() for pokemon in mega_data]
         suggestions.extend(mega_suggestions)
     return suggestions
@@ -34,11 +36,20 @@ def get_move_suggestions(name, type):
             if pokemon["mega_name"] == name:
                 name = pokemon["pokemon_name"]
 
-        suggestions = [
-            (pokemon[f"{type}_moves"] + pokemon[f"elite_{type}_moves"])
-            for pokemon in data
-            if pokemon["pokemon_name"] == name
-        ]
+        name = name.split()
+
+        if len(name) > 1:
+            suggestions = [
+                (pokemon[f"{type}_moves"] + pokemon[f"elite_{type}_moves"])
+                for pokemon in data
+                if pokemon["pokemon_name"] == name[0] and pokemon["form"] == name[1]
+            ]
+        else:
+            suggestions = [
+                (pokemon[f"{type}_moves"] + pokemon[f"elite_{type}_moves"])
+                for pokemon in data
+                if pokemon["pokemon_name"] == name[0]
+            ]
     result = []
     [result.extend(sublist) for sublist in suggestions]
     return result

@@ -12,7 +12,7 @@ class Pokemon:
         self.lvl = lvl
         self.fast_move = fast_move
         self.charged_move = charged_move
-        self.iv = [int(stat) for stat in iv.split("-")]
+        self.iv = iv
         self.is_shadow = is_shadow
         self.types = []
         self.sprite = None
@@ -24,7 +24,6 @@ class Pokemon:
         if name[0].lower() == "mega" or name[0].lower() == "primal":
             return True
         return False
-
 
     def get_pokemon_stats(self):
         pokemon_stats = "pokemon_stats.json"
