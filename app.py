@@ -85,6 +85,7 @@ def pokemon_dps(name, shadow):
             cm_suggestions=cm_suggestions,
             shadow=shadow,
             pokemons=pokemons,
+            types_colours=types_colours,
         )
 
     if request.method == "POST":
