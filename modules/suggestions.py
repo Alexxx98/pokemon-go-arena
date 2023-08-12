@@ -10,12 +10,12 @@ def get_name_suggestions():
         data = response.json()
         mega_data = mega_response.json()
         suggestions = [
-            (" ").join([pokemon["pokemon_name"], pokemon["form"]])
+            (" ").join([pokemon["pokemon_name"], pokemon["form"]]).strip()
             for pokemon in data
             if "20" not in pokemon["form"]
         ]
-        suggestions = [suggestion.replace("Normal", "") for suggestion in suggestions]
-        mega_suggestions = [pokemon["mega_name"] for pokemon in mega_data]
+        suggestions = [suggestion.replace("Normal", "").strip() for suggestion in suggestions]
+        mega_suggestions = [pokemon["mega_name"].strip() for pokemon in mega_data]
         suggestions.extend(mega_suggestions)
     return suggestions
 

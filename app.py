@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 from modules import Pokemon
 from modules import suggestions as sg
@@ -59,12 +59,15 @@ def home():
 
 @app.route("/dps", methods=["POST", "GET"])
 def dps():
+    suggestions = sg.get_name_suggestions()
     if request.method == "GET":
-        suggestions = sg.get_name_suggestions()
         return render_template("dps.html", suggestions=suggestions)
 
     if request.method == "POST":
-        name = request.form.get("name").strip()
+        name = request.form.get("name").title()
+        if name not in suggestions:
+            flash("Can't find a pokemon with such name", category="danger")
+            return render_template("dps.html", suggestions=suggestions)
         shadow = can_be_shadow(name)
         return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
 
