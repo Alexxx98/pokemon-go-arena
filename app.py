@@ -1,7 +1,6 @@
 from flask import Flask, flash, render_template, request, redirect, url_for
 from dotenv import load_dotenv
-from modules import Pokemon
-from modules import suggestions as sg
+from modules import Pokemon, suggestions as sg
 import requests
 import os
 
@@ -139,16 +138,8 @@ def pokemon_dps(name, shadow):
         pokemon.calculate_dps(fm, cm, atk_stat, atk_iv)
 
         pokemon.get_sprite(stats, name, is_shiny)
-    else:
-        is_shiny = None
-    return render_template(
-        "pokemon_dps.html",
-        is_shiny=is_shiny,
-        pokemons=pokemons,
-        types_colours=types_colours,
-        name=name,
-        shadow=shadow,
-    )
+    flash("Calculated successfuly!", category="success")
+    return redirect(url_for('pokemon_dps', name=name, shadow=shadow))
 
 
 @app.route("/clear")
@@ -161,6 +152,11 @@ def clear():
 def clear_home():
     pokemons.clear()
     return redirect("home", code=302)
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("error_404.html"), 404
 
 
 if __name__ == "__main__":
