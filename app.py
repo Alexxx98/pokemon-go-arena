@@ -1,6 +1,6 @@
 from flask import Flask, flash, render_template, request, redirect, url_for
 from dotenv import load_dotenv
-from modules import Pokemon, suggestions as sg, images_converter as ic
+from modules import Pokemon, suggestions as sg
 import requests
 import os
 
@@ -156,9 +156,7 @@ def clear_home():
 
 @app.errorhandler(404)
 def page_not_found(error):
-    pikachu_gif = "angry_pikachu"
-    angry_pikachu = ic.generate_gif(pikachu_gif)
-    return render_template("error_404.html", angry_pikachu=angry_pikachu), 404
+    return render_template("error_404.html"), 404
 
 
 if __name__ == "__main__":
