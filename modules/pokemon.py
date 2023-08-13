@@ -161,14 +161,14 @@ class Pokemon:
             FM_STAB = 1.2
         else:
             FM_STAB = 1
-        fm_dmg = 0.5 * attack / 100 * fm_power * FM_STAB * SHADOW
+        fm_dmg = 0.5 * attack / 150 * fm_power * FM_STAB * SHADOW
 
         # power of charge move
         if cm_type in self.types:
             CM_STAB = 1.2
         else:
             CM_STAB = 1
-        cm_dmg = 0.5 * attack / 100 * cm_power * CM_STAB * SHADOW
+        cm_dmg = 0.5 * attack / 150 * cm_power * CM_STAB * SHADOW
 
         # dps and eps of fast and charged moves
         fdps = fm_dmg / fm_duration

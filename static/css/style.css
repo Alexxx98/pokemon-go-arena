@@ -105,7 +105,7 @@ img.sprite {
 img.shadow {
     position: absolute;
     top: 7%;
-    left: 4%;
+    left: 4.5%;
     z-index: 1010;
 }
 
@@ -128,12 +128,13 @@ label.cm {
 }
 
 input.border {
-    border: 2px solid;
-    border-color: rgb(5, 237, 254);
+    outline: 2px solid;
+    outline-color: rgb(5, 237, 254);
 }
 
 select.iv {
     border: 2px solid;
     border-color: rgb(5, 237, 254);
-    min-width: 14.5%;
+    width: 84px;
+    min-width: 84px;
 }
