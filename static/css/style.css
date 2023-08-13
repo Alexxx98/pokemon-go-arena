@@ -127,7 +127,8 @@ label.cm {
     right: 15%;
 }
 
-input.border {
+input.dps-form {
+    min-width: 257px;
     outline: 2px solid;
     outline-color: rgb(5, 237, 254);
 }

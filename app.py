@@ -139,7 +139,7 @@ def pokemon_dps(name, shadow):
 
         pokemon.get_sprite(stats, name, is_shiny)
     flash("Calculated successfuly!", category="success")
-    return redirect(url_for('pokemon_dps', name=name, shadow=shadow))
+    return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
 
 
 @app.route("/clear")
@@ -157,6 +157,11 @@ def clear_home():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("error_404.html"), 404
+
+
+@app.errorhandler(503)
+def service_unavailable(error):
+    return render_template("error_503.html"), 503
 
 
 if __name__ == "__main__":
