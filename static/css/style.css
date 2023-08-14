@@ -133,9 +133,14 @@ input.dps-form {
     outline-color: rgb(5, 237, 254);
 }
 
+select.lvl {
+    min-width: 257px;
+    outline: 2px solid;
+    outline-color: rgb(5, 237, 254);
+}
+
 select.iv {
     border: 2px solid;
     border-color: rgb(5, 237, 254);
-    width: 84px;
     min-width: 84px;
 }

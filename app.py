@@ -1,6 +1,7 @@
 from flask import Flask, flash, render_template, request, redirect, url_for
 from dotenv import load_dotenv
 from modules import Pokemon, suggestions as sg
+import numpy as np
 import requests
 import os
 
@@ -75,6 +76,7 @@ def dps():
 def pokemon_dps(name, shadow):
     fm_suggestions = sg.get_move_suggestions(name, type="fast")
     cm_suggestions = sg.get_move_suggestions(name, type="charged")
+    levels = np.arange(51, 0, -0.5)
 
     if request.method == "GET":
         return render_template(
@@ -85,18 +87,11 @@ def pokemon_dps(name, shadow):
             shadow=shadow,
             pokemons=pokemons,
             types_colours=types_colours,
+            levels=levels,
         )
 
     if request.method == "POST":
         lvl = request.form.get("lvl")
-        try:
-            if int(lvl) not in range(1, 52):
-                flash("Pokemon level has to be in 1 to 51 range", category="danger")
-                return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
-        except ValueError:
-            flash("Level has to a number", category="danger")
-            return redirect(url_for("pokemon_dps", name=name, shadow=shadow))
-
         fast_move = request.form.get("fast_move").title()
         if fast_move not in fm_suggestions:
             flash("Can't find such fast move", category="danger")

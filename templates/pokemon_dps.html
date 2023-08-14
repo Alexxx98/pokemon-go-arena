@@ -32,7 +32,11 @@
                     <label for="lvl"><h2>Level:</h2></label>
                 </div>
                 <div class="col-4">
-                    <input class="dps-form" type="text" name="lvl" placeholder="51" autocomplete="off"/>
+                    <select class="lvl" id="lvl" name="lvl">
+                        {% for number in levels %}
+                            <option value="{{ number }}">{{ number }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
 
